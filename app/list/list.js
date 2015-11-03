@@ -12,8 +12,29 @@ angular.module('itemList.list', ['ngRoute'])
 .controller('ListCtrl', ['$scope', '$firebaseObject', function($scope, $firebaseObject) {
 
     var ref = new Firebase("https://itemlist.firebaseio.com/");
-    $scope.data = $firebaseObject(ref);
+    $scope.items = $firebaseObject(ref);
 
-    console.log($scope.data);
+    $scope.addItem = function() {
+        ref.push({
+          name: $scope.name,
+          description: $scope.desc
+        });
+    };
+
+    $scope.editItem = function(item) {
+        $scope.editActive = true;
+
+        $scope.name = item.name;
+        $scope.desc = item.description;
+    };
+
+    $scope.saveEditItem = function() {
+        var current = $scope.items.$child(key);
+        current.name = $scope.name;
+        current.description = $scope.desc;
+        current.$save();
+
+        $scope.editActive = false;
+    };
 
 }]);

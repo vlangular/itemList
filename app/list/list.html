@@ -1,1 +1,12 @@
-<p>Here lies the list.</p>
+<input type="text" ng-model="name">
+<textarea cols="30" rows="10" ng-model="desc"></textarea>
+<button ng-click="addItem()" ng-hide="editActive">Add something</button>
+<button ng-click="saveEditItem()" ng-show="editActive">Edit this</button>
+
+<br>
+
+<div class="item" ng-repeat="item in items">
+    <input type="text" ng-model="item.name">
+    <textarea cols="30" rows="10" ng-model="item.description"></textarea>
+    <button ng-click="editItem(item)">Edit something</button>
+</div>
