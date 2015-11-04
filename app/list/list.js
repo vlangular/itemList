@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('itemList.list', ['ngRoute'])
+angular.module('itemList.list', ['ngRoute','firebase'])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/list', {
@@ -9,32 +9,69 @@ angular.module('itemList.list', ['ngRoute'])
   });
 }])
 
-.controller('ListCtrl', ['$scope', '$firebaseObject', function($scope, $firebaseObject) {
+.controller('ListCtrl', ['$scope', '$firebaseArray', function($scope, $firebaseArray) {
 
     var ref = new Firebase("https://itemlist.firebaseio.com/");
-    $scope.items = $firebaseObject(ref);
+    $scope.items = $firebaseArray(ref);
+
+    $scope.showActive = false;
 
     $scope.addItem = function() {
-        ref.push({
+        $scope.hide();
+
+        $scope.items.$add({
           name: $scope.name,
           description: $scope.desc
         });
+
+        clearFields();
     };
 
     $scope.editItem = function(item) {
+        $scope.hide();
+
         $scope.editActive = true;
 
+        $scope.id = item.$id;
         $scope.name = item.name;
         $scope.desc = item.description;
     };
 
+    $scope.showItem = function(item) {
+        $scope.nameShow = item.name;
+        $scope.descShow = item.description;
+
+        $scope.showActive = true;
+    };
+
     $scope.saveEditItem = function() {
-        var current = $scope.items.$child(key);
+        $scope.hide();
+
+        var id = $scope.id;
+        console.log(id);
+        var current = $scope.items.$getRecord(id);
         current.name = $scope.name;
         current.description = $scope.desc;
-        current.$save();
+        $scope.items.$save(current);
 
         $scope.editActive = false;
+
+        clearFields();
+    };
+
+    $scope.deleteItem = function(item) {
+        $scope.hide();
+        $scope.items.$remove(item);
+    };
+
+    $scope.hide = function() {
+        $scope.showActive = false;
+    };
+
+    var clearFields = function() {
+        $scope.id = "";
+        $scope.name = "";
+        $scope.desc = "";
     };
 
 }]);

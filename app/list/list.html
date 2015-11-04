@@ -1,12 +1,22 @@
 <input type="text" ng-model="name">
 <textarea cols="30" rows="10" ng-model="desc"></textarea>
 <button ng-click="addItem()" ng-hide="editActive">Add something</button>
-<button ng-click="saveEditItem()" ng-show="editActive">Edit this</button>
+<button ng-click="saveEditItem(items)" ng-show="editActive">Edit this</button>
 
 <br>
 
 <div class="item" ng-repeat="item in items">
     <input type="text" ng-model="item.name">
     <textarea cols="30" rows="10" ng-model="item.description"></textarea>
+    <button ng-click="showItem(item)">Show something</button>
     <button ng-click="editItem(item)">Edit something</button>
+    <button ng-click="deleteItem(item)">Delete something</button>
+</div>
+
+<br>
+
+<div ng-show="showActive">
+    <input type="text" ng-model="nameShow">
+    <textarea cols="30" rows="10" ng-model="descShow"></textarea>
+    <button ng-click="hide()">Close this</button>
 </div>
